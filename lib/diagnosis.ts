@@ -12,15 +12,16 @@ export function calculateDayMaster(birthDate: string): string {
 }
 
 export function calculateFiveElementTendency(dayMaster: string, birthPlace: string): string {
-  const elementMap: { [key: string]: string } = {
-    '甲木': '木', '乙木': '木',
-    '丙火': '火', '丁火': '火',
-    '戊土': '土', '己土': '土',
-    '庚金': '金', '辛金': '金',
-    '壬水': '水', '癸水': '水'
-  };
+  // 将来的に日干から五行を判定する際に使用予定
+  // const elementMap: { [key: string]: string } = {
+  //   '甲木': '木', '乙木': '木',
+  //   '丙火': '火', '丁火': '火',
+  //   '戊土': '土', '己土': '土',
+  //   '庚金': '金', '辛金': '金',
+  //   '壬水': '水', '癸水': '水'
+  // };
   
-  const element = elementMap[dayMaster] || '木';
+  // const element = elementMap[dayMaster] || '木';
   
   const northernPrefectures = ['北海道', '青森県', '岩手県', '秋田県'];
   const southernPrefectures = ['沖縄県', '鹿児島県', '宮崎県', '熊本県'];

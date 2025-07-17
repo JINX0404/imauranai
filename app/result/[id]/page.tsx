@@ -2,12 +2,13 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 interface Props {
-  params: { id: string };
-  searchParams: { [key: string]: string | undefined };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const character = searchParams.character || '探求者タイプ';
+  const params = await searchParams;
+  const character = params.character || '探求者タイプ';
   const description = `私の診断結果は「${character}」でした！算命学×性格診断で自分の本質を知ろう！`;
   
   const ogImageUrl = `/api/og?character=${encodeURIComponent(character)}`;
@@ -30,17 +31,19 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   };
 }
 
-export default function SharedResultPage({ params, searchParams }: Props) {
+export default async function SharedResultPage({ searchParams }: Props) {
+  const params = await searchParams;
+  
   // この画面は実際には表示されず、OGPのためだけに存在
   // 実際の結果は/resultページで表示される
   
-  if (!searchParams.character) {
+  if (!params.character) {
     notFound();
   }
 
   // すぐに通常の結果ページにリダイレクト
   if (typeof window !== 'undefined') {
-    window.location.href = `/result?${new URLSearchParams(searchParams).toString()}`;
+    window.location.href = `/result?${new URLSearchParams(params as Record<string, string>).toString()}`;
   }
 
   return (
