@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 算命学×性格診断アプリ
 
-## Getting Started
+生年月日と性格傾向から、算命学と性格診断を組み合わせてあなたの本質を読み解く無料診断アプリです。
 
-First, run the development server:
+## 🚀 デプロイ方法
+
+### Vercelでのデプロイ
+
+1. [Vercel](https://vercel.com/)にアクセスしてアカウントを作成
+2. 「Import Git Repository」をクリック
+3. GitHubアカウントを連携して、`imauranai`リポジトリを選択
+4. プロジェクト名を設定（例：`uranai-app`）
+5. 「Deploy」ボタンをクリック
+
+デプロイが完了すると、自動的にURLが発行されます。
+
+## 🛠️ ローカル開発
 
 ```bash
+# 依存関係のインストール
+npm install
+
+# 開発サーバーの起動
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+http://localhost:3000 でアプリケーションが起動します。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 プロジェクト構造
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+uranai/
+├── app/                  # Next.js App Router
+│   ├── diagnosis/        # 診断ページ
+│   ├── result/          # 結果ページ
+│   └── share/           # シェアページ
+├── components/          # Reactコンポーネント
+├── lib/                 # ユーティリティ関数
+├── public/data/         # 診断結果JSONファイル
+└── types/               # TypeScript型定義
+```
 
-## Learn More
+## 🔧 診断データの追加方法
 
-To learn more about Next.js, take a look at the following resources:
+新しい診断パターンを追加する場合：
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. `public/data/`ディレクトリに新しいJSONファイルを作成
+2. ファイル名は`日干_五行傾向_性格傾向.json`の形式
+3. `default.json`を参考に診断結果を記述
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📝 今後の実装予定
 
-## Deploy on Vercel
+- [ ] Stripe決済の実装（有料プラン用）
+- [ ] 相性診断機能
+- [ ] 年間運勢機能
+- [ ] より詳細な診断結果
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🤝 貢献方法
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. このリポジトリをフォーク
+2. 新しいブランチを作成（`git checkout -b feature/amazing-feature`）
+3. 変更をコミット（`git commit -m '新機能を追加'`）
+4. ブランチにプッシュ（`git push origin feature/amazing-feature`）
+5. プルリクエストを作成
