@@ -1,5 +1,11 @@
 export type PersonalityType = '直感型' | '論理型' | '感情型' | '現実型';
 
+export type MBTIType = 
+  | 'INTJ' | 'INTP' | 'ENTJ' | 'ENTP'
+  | 'INFJ' | 'INFP' | 'ENFJ' | 'ENFP'
+  | 'ISTJ' | 'ISFJ' | 'ESTJ' | 'ESFJ'
+  | 'ISTP' | 'ISFP' | 'ESTP' | 'ESFP';
+
 export type Prefecture = 
   | '北海道' | '青森県' | '岩手県' | '宮城県' | '秋田県' | '山形県' | '福島県'
   | '茨城県' | '栃木県' | '群馬県' | '埼玉県' | '千葉県' | '東京都' | '神奈川県'
@@ -9,11 +15,19 @@ export type Prefecture =
   | '徳島県' | '香川県' | '愛媛県' | '高知県' | '福岡県' | '佐賀県' | '長崎県'
   | '熊本県' | '大分県' | '宮崎県' | '鹿児島県' | '沖縄県';
 
+export interface BirthLocation {
+  country: string;
+  region?: string; // 都道府県/州など
+  latitude?: number;
+  longitude?: number;
+}
+
 export interface UserInput {
   birthDate: string;
-  birthPlace: Prefecture;
+  birthLocation: BirthLocation;
   birthTime?: string;
   personalityType: PersonalityType;
+  mbtiType?: MBTIType;
 }
 
 export interface FiveElements {

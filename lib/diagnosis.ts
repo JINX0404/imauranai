@@ -1,4 +1,4 @@
-import { UserInput, DiagnosisResult } from '@/types';
+import { UserInput, DiagnosisResult, BirthLocation } from '@/types';
 
 const DAY_MASTERS = ['甲木', '乙木', '丙火', '丁火', '戊土', '己土', '庚金', '辛金', '壬水', '癸水'];
 
@@ -11,7 +11,7 @@ export function calculateDayMaster(birthDate: string): string {
   return DAY_MASTERS[diffDays % 10];
 }
 
-export function calculateFiveElementTendency(dayMaster: string, birthPlace: string): string {
+export function calculateFiveElementTendency(dayMaster: string, birthLocation: BirthLocation): string {
   // 将来的に日干から五行を判定する際に使用予定
   // const elementMap: { [key: string]: string } = {
   //   '甲木': '木', '乙木': '木',
@@ -27,12 +27,31 @@ export function calculateFiveElementTendency(dayMaster: string, birthPlace: stri
   const southernPrefectures = ['沖縄県', '鹿児島県', '宮崎県', '熊本県'];
   
   let tendency = '';
-  if (northernPrefectures.includes(birthPlace)) {
-    tendency = '水強火弱';
-  } else if (southernPrefectures.includes(birthPlace)) {
-    tendency = '火強水弱';
-  } else {
-    tendency = '均衡型';
+  
+  // 日本の場合
+  if (birthLocation.country === 'JP') {
+    if (northernPrefectures.includes(birthLocation.region || '')) {
+      tendency = '水強火弱';
+    } else if (southernPrefectures.includes(birthLocation.region || '')) {
+      tendency = '火強水弱';
+    } else {
+      tendency = '均衡型';
+    }
+  } 
+  // 他の国の場合（緯度ベースで判定）
+  else {
+    // 北部の国
+    if (['CA', 'GB', 'DE', 'FR'].includes(birthLocation.country)) {
+      tendency = '水強火弱';
+    }
+    // 南部の国
+    else if (['AU', 'BR', 'IN'].includes(birthLocation.country)) {
+      tendency = '火強水弱';
+    }
+    // その他
+    else {
+      tendency = '均衡型';
+    }
   }
   
   return tendency;
@@ -40,9 +59,16 @@ export function calculateFiveElementTendency(dayMaster: string, birthPlace: stri
 
 export function generatePatternId(userInput: UserInput): string {
   const dayMaster = calculateDayMaster(userInput.birthDate);
-  const fiveElementTendency = calculateFiveElementTendency(dayMaster, userInput.birthPlace);
+  const fiveElementTendency = calculateFiveElementTendency(dayMaster, userInput.birthLocation);
   
-  return `${dayMaster}_${fiveElementTendency}_${userInput.personalityType}`;
+  let patternId = `${dayMaster}_${fiveElementTendency}_${userInput.personalityType}`;
+  
+  // MBTIが指定されている場合は追加
+  if (userInput.mbtiType) {
+    patternId += `_${userInput.mbtiType}`;
+  }
+  
+  return patternId;
 }
 
 export async function loadDiagnosisResult(patternId: string): Promise<DiagnosisResult | null> {
