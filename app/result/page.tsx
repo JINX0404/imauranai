@@ -6,12 +6,14 @@ import Link from 'next/link';
 import { DiagnosisResult } from '@/types';
 import { loadDiagnosisResult } from '@/lib/diagnosis';
 import FiveElementsChart from '@/components/FiveElementsChart';
+import ShareButton from '@/components/ShareButton';
 
 export default function ResultPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [result, setResult] = useState<DiagnosisResult | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showSharePopup, setShowSharePopup] = useState(false);
 
   useEffect(() => {
     const pattern = searchParams.get('pattern');
@@ -23,6 +25,8 @@ export default function ResultPage() {
     loadDiagnosisResult(pattern).then((data) => {
       setResult(data);
       setLoading(false);
+      // 結果表示後、3秒後にシェアポップアップを表示
+      setTimeout(() => setShowSharePopup(true), 3000);
     });
   }, [searchParams, router]);
 
@@ -145,6 +149,33 @@ export default function ResultPage() {
           </div>
         </div>
 
+        {/* シェア促進ポップアップ */}
+        {showSharePopup && (
+          <div className="fixed bottom-4 left-4 right-4 bg-white rounded-2xl shadow-2xl p-4 border-2 border-indigo-200 animate-bounce md:max-w-sm md:mx-auto">
+            <button
+              onClick={() => setShowSharePopup(false)}
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+            >
+              ✕
+            </button>
+            <div className="text-center space-y-2">
+              <div className="text-2xl">🎉</div>
+              <p className="font-semibold text-gray-800">診断結果をシェアしよう！</p>
+              <p className="text-xs text-gray-600">
+                友達にもこの診断を教えてあげて
+                <br />
+                みんなの結果も見てみよう！
+              </p>
+              <Link
+                href={`/share?character=${encodeURIComponent(result.characterName)}`}
+                className="block bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium py-2 px-4 rounded-full text-sm hover:from-pink-600 hover:to-purple-700 transition-all"
+              >
+                シェアする ✨
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* 将来の有料機能へのプレースホルダー */}
         <div className="bg-gray-100 rounded-2xl p-6 text-center space-y-4">
           <h3 className="text-lg font-semibold text-gray-600">プレミアム機能（準備中）</h3>
@@ -156,12 +187,10 @@ export default function ResultPage() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <Link
-            href={`/share?character=${encodeURIComponent(result.characterName)}`}
+          <ShareButton
+            characterName={result.characterName}
             className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-full hover:from-indigo-600 hover:to-purple-700 transition-all text-center shadow-lg"
-          >
-            結果をシェアする
-          </Link>
+          />
           <Link
             href="/diagnosis"
             className="flex-1 bg-white border-2 border-indigo-500 text-indigo-500 font-semibold py-3 px-6 rounded-full hover:bg-indigo-50 transition-all text-center"
